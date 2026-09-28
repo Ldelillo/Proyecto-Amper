@@ -61,10 +61,12 @@ def cargar_ultimos_7_dias():
 def min_max(): 
     precios = cargar_ultimos_7_dias()
 
-    minimo = min(precios, key=lambda x: x["value"])
-    maximo = max(precios, key=lambda x: x["value"])
+    precios_ordenados = sorted(precios, key=lambda x: x["value"])
+    #Puede ser 1 unidad o un rango, ya que en el enunciado ponia minimos y maximos
+    menores = precios_ordenados[:1] 
+    mayores = precios_ordenados[-1:]
 
-    return minimo, maximo
+    return menores, mayores
 
 #Creacion y actualizacion bbdd
 def crear_base_datos(): #No implemento una funcion para borrar la base de datos por tiempo

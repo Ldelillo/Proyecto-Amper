@@ -38,8 +38,8 @@ def inicio():
         "index.html",
         precios=precios,
         fecha=fecha,
-        minimo=minimo,
-        maximo=maximo
+        menores=minimo,
+        mayores=maximo
     )
 
 if __name__ == "__main__":
