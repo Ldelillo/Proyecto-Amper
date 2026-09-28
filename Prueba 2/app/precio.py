@@ -1,5 +1,5 @@
 import requests
-from datetime import date
+from datetime import date, timedelta
 import sqlite3
 
 #Obtener precios
@@ -26,7 +26,45 @@ def obtener_precios(fecha):
 
     return valores
 
+def ultimos_dias():
+    hoy = date.today()
 
+    fechas = []
+
+    for i in range(7):
+        fecha = hoy - timedelta(days=i)
+        fechas.append(fecha.strftime("%Y-%m-%d"))
+
+    return fechas
+
+def cargar_ultimos_7_dias():
+    fechas = ultimos_dias()
+
+    precios = []
+
+    for fecha in fechas:
+
+        if comprobar_fecha(fecha):
+            datos = leer_precios(fecha)
+
+        else:
+            datos = obtener_precios(fecha)
+
+            if datos:
+                guardar_precios(datos)
+                datos = leer_precios(fecha)
+
+        precios.extend(datos)
+
+    return precios
+
+def min_max(): 
+    precios = cargar_ultimos_7_dias()
+
+    minimo = min(precios, key=lambda x: x["value"])
+    maximo = max(precios, key=lambda x: x["value"])
+
+    return minimo, maximo
 
 #Creacion y actualizacion bbdd
 def crear_base_datos(): #No implemento una funcion para borrar la base de datos por tiempo
@@ -41,6 +79,7 @@ def crear_base_datos(): #No implemento una funcion para borrar la base de datos 
         conexion.commit()
         conexion.close()
         return True
+    
     except sqlite3.Error as error:
         print("Error al crear la base de datos:", error)
         return False

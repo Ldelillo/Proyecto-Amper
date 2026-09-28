@@ -6,7 +6,8 @@ from precio import (
     comprobar_fecha,
     leer_precios,
     obtener_precios,
-    guardar_precios
+    guardar_precios,
+    min_max
 )
 
 app = Flask(__name__)
@@ -17,29 +18,28 @@ if not crear_base_datos():
 
 @app.route("/", methods=["GET", "POST"])
 def inicio():
-
     precios = []
     fecha = None
 
     if request.method == "POST":
-
         fecha = request.form["fecha"]
 
         if comprobar_fecha(fecha):
-
             precios = leer_precios(fecha)
-
         else:
-
             precios = obtener_precios(fecha)
 
             if precios:
                 guardar_precios(precios)
 
+    minimo, maximo = min_max()
+
     return render_template(
         "index.html",
         precios=precios,
-        fecha=fecha
+        fecha=fecha,
+        minimo=minimo,
+        maximo=maximo
     )
 
 if __name__ == "__main__":

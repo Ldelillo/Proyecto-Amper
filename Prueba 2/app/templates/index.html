@@ -91,6 +91,19 @@
         });
     </script>
 
+    <h2>Valores extremos de los últimos 7 días</h2>
+
+    <p>
+        <strong>Precio mínimo:</strong>
+        {{ minimo["value"] }} €/MWh
+        ({{ minimo["datetime"] }})
+    </p>
+
+    <p>
+        <strong>Precio máximo:</strong>
+        {{ maximo["value"] }} €/MWh
+        ({{ maximo["datetime"] }})
+    </p>
 </body>
 
 </html>
