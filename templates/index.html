@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Precio PVPC</title>
+</head>
+
+<body>
+
+    <h1>Precio de la electricidad - PVPC</h1>
+
+    <form method="POST">
+
+        <label for="fecha">Selecciona una fecha:</label>
+
+        <input type="date" id="fecha" name="fecha" required>
+
+        <button type="submit">Consultar</button>
+
+    </form>
+
+    {% if precios %}
+
+    <h2>Precios del {{ fecha }}</h2>
+
+    <table>
+        <tr>
+            <th>Hora</th>
+            <th>Precio (€/MWh)</th>
+        </tr>
+
+        {% for precio in precios %}
+        <tr>
+            <td>{{ precio["datetime"] }}</td>
+            <td>{{ precio["value"] }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <h2>Evolución del precio</h2>
+
+    <canvas id="graficaPrecios"></canvas>
+
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const precios = {{ precios | tojson | safe }};
+
+        const horas = precios.map(precio => precio.datetime.substring(11, 16));
+        const valores = precios.map(precio => precio.value);
+
+        const ctx = document.getElementById("graficaPrecios");
+
+        new Chart(ctx, {
+            type: "line",
+
+            data: {
+                labels: horas,
+
+                datasets: [{
+                    label: "Precio (€/MWh)",
+                    data: valores,
+                    borderWidth: 2,
+                    tension: 0.2
+                }]
+            },
+
+            options: {
+                responsive: true,
+
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Hora"
+                        }
+                    },
+
+                    y: {
+                        title: {
+                            display: true,
+                            text: "Precio (€/MWh)"
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
