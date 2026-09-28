@@ -1,5 +1,5 @@
 #En general a lo largo de la carrera no he realizado interfaces por lo que esto es en gran parte uso de IA
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 
 from precio import (
     crear_base_datos,
@@ -9,6 +9,7 @@ from precio import (
     guardar_precios,
     min_max
 )
+from pdf import generar_pdf
 
 app = Flask(__name__)
 
@@ -41,6 +42,16 @@ def inicio():
         menores=minimo,
         mayores=maximo
     )
+
+@app.route("/pdf", methods=["POST"])
+def descargar_pdf():
+    fecha = request.form["fecha"]
+
+    precios = leer_precios(fecha)
+
+    archivo = generar_pdf(fecha, precios)
+
+    return send_file(archivo, as_attachment=True)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

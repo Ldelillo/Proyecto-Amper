@@ -38,7 +38,10 @@
         {% endfor %}
 
     </table>
-
+    <form method="POST" action="/pdf">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+        <button type="submit">Descargar PDF</button>
+    </form>
     <h2>Evolución del precio</h2>
 
     <canvas id="graficaPrecios"></canvas>
@@ -114,6 +117,8 @@
         </li>
         {% endfor %}
     </ul>
+
+
 </body>
 
 </html>
